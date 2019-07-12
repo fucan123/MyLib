@@ -19,6 +19,12 @@
     <Filter Include="Driver">
       <UniqueIdentifier>{a2c74eb2-a01a-4113-9e86-d4a03734bd94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Win32">
+      <UniqueIdentifier>{522b57cc-463a-4f64-ae87-1139e22315e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{ab1ecca7-18c6-4c43-98fd-47434ef0e996}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -60,6 +66,21 @@
     <ClInclude Include="My\My\Driver\JumpSafe.h">
       <Filter>Driver</Filter>
     </ClInclude>
+    <ClInclude Include="My\My\Win32\Peb.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Win32\Hook.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Socket\Client.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Socket\MServer.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Socket\SocketString.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -94,6 +115,21 @@
     </ClCompile>
     <ClCompile Include="My\My\Driver\JumpSafe.cpp">
       <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Win32\Peb.cpp">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Win32\Hook.cpp">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Socket\Client.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Socket\MServer.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Socket\SocketString.cpp">
+      <Filter>Socket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

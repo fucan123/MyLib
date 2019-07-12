@@ -1,5 +1,5 @@
 #include "KbdMou.h"
-#include "JumpSafe.h"
+#include "Sys.h"
 #include <stdio.h>
 
 // 链接
@@ -47,7 +47,7 @@ typedef struct _CTL_BUFF {
 	};
 } CTL_BUFF, *PCTL_BUFF;
 
-static JumpSafe __safe;
+static Sys      __sysKbdMou;
 static HANDLE   __hDevice = NULL;
 static USHORT   __nScreenX = 0;
 static USHORT   __nScreenY = 0;
@@ -55,13 +55,13 @@ static USHORT   __nScreenY = 0;
 // 安装驱动
 bool Drv_InstallDriver()
 {
-	return __safe.Install(L"KbdMouseDriver_2019", L"KbdMouse Driver(2019)", L"C:\\\\Kb_Mouse_Driver.sys");
+	return __sysKbdMou.Install(L"KbdMouseDriver_2019", L"KbdMouse Driver(2019)", L"C:\\\\Kb_Mouse_Driver.sys");
 }
 
 // 卸载驱动
 bool Drv_UnstallDriver()
 {
-	return __safe.UnInstall();
+	return __sysKbdMou.UnInstall();
 }
 
 // 连接到驱动

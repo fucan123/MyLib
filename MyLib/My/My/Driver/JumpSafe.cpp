@@ -21,7 +21,7 @@ BOOL JumpSafe::CreateDevice()
 	return TRUE;
 }
 
-BOOL JumpSafe::FakeProcess(WCHAR * SystemName, bool ce)
+BOOL JumpSafe::FakeProcess(WCHAR * SystemName, bool ce, bool od)
 {
 	DWORD Pid = 0;
 	if (SystemName)
@@ -33,6 +33,7 @@ BOOL JumpSafe::FakeProcess(WCHAR * SystemName, bool ce)
 		SetError(2, L"获取进程ID失败");
 		return FALSE;
 	}
+	//Pid = 632;
 
 	CTL_FAKE Ctl;
 	Ctl.Code = CTLCODE_FAKE;
@@ -48,6 +49,26 @@ BOOL JumpSafe::FakeProcess(WCHAR * SystemName, bool ce)
 		if (cePid) {
 			Ctl.ToPid = cePid;
 			DeviceIoControl(m_hDevice, CTL_DEVICE, (LPVOID)&Ctl, sizeof(Ctl), NULL, 0, &dwRet, NULL);
+		}
+	}
+	if (od) {
+		DWORD odPid = SGetProcessId(L"7777OD.exe");
+		//odPid = 8472;
+		if (!odPid) {
+			odPid = SGetProcessId(L"Eugenio.exe");
+		}
+		if (!odPid) {
+			odPid = SGetProcessId(L"破洞2018过检测.exe");
+		}
+		if (!odPid) {
+			odPid = SGetProcessId(L"HawkOD.exe");
+		}
+		if (odPid) {
+			Ctl.ToPid = odPid;
+			DeviceIoControl(m_hDevice, CTL_DEVICE, (LPVOID)&Ctl, sizeof(Ctl), NULL, 0, &dwRet, NULL);
+		}
+		else {
+			printf("z好不到OD进程!!!\n");
 		}
 	}
 	return TRUE;

@@ -213,6 +213,7 @@ BOOL InjectDll(DWORD dwPID, LPCTSTR szDllPath)
 		printf("InjectDll() : MyCreateRemoteThread() failed!!!\n");
 		goto INJECTDLL_EXIT;
 	}
+	printf("Last Error:%d\n", GetLastError());
 	Sleep(100);
 INJECTDLL_EXIT:
 	bRet = CheckDllInProcess(dwPID, szDllPath); // 确认结果

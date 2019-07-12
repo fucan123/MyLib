@@ -14,10 +14,14 @@ bool Sys::Install(const wchar_t* sName, const wchar_t* dName, const wchar_t* pat
 		path,
 		NULL,NULL,NULL,NULL,NULL);
 
-	//printf("Last Error:%d\n", GetLastError());
+	if (!m_hService) {
+		printf("创建驱动文件失败:%d\n", GetLastError());
+	}
+	printf("Last Error:%d\n", GetLastError());
 
 	bool start = StartService((SC_HANDLE)m_hService, NULL, NULL);
 	if (!start) {
+		printf("no start:%d\n", GetLastError());
 		DeleteService((SC_HANDLE)m_hService);
 		CloseServiceHandle((SC_HANDLE)m_hService);
 		CloseServiceHandle((SC_HANDLE)m_hScmanager);

@@ -25,7 +25,7 @@ public:
 	  伪装成系统进程
 	  @SystemName 系统进程名称 默认 csrss.exe
 	*/
-	BOOL  FakeProcess(WCHAR* SystemName=NULL, bool ce=false);
+	BOOL  FakeProcess(WCHAR* SystemName=NULL, bool ce=false, bool od=false);
 	/*  关闭设备 */
 	VOID  CloseDevice();
 	/*
