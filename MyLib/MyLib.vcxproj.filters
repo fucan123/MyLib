@@ -25,6 +25,12 @@
     <Filter Include="Socket">
       <UniqueIdentifier>{ab1ecca7-18c6-4c43-98fd-47434ef0e996}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{2c972461-f9f3-4c6a-a2b3-d35fe5c2987d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{52a9d284-b7a4-4847-8ca1-d561af44ef23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -81,6 +87,78 @@
     <ClInclude Include="My\My\Socket\SocketString.h">
       <Filter>Socket</Filter>
     </ClInclude>
+    <ClInclude Include="My\My\Win32\PE.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Db\Sqlite.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Db\sqlite3.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\MachineID.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\md5.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\C.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\Des.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\MachineID2.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\SeeImgNum.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Asm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Socket\HttpSocket.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\EncryptString.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\MString.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\Base64.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\Sha1.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Win32\LoadDll.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Win32\ShowHook.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Db\Sql.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\AutoReadImgWord.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\UI\wke.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\UI\HtmlUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\UI\HtmlUIData.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\FileConfig.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="My\My\Common\DownFile.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -131,5 +209,73 @@
     <ClCompile Include="My\My\Socket\SocketString.cpp">
       <Filter>Socket</Filter>
     </ClCompile>
+    <ClCompile Include="My\My\Win32\PE.cpp">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Db\Sqlite.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Db\sqlite3.c">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\MachineID.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\md5.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\C.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\Des.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\MachineID2.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\SeeImgNum.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Socket\HttpSocket.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\EncryptString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\MString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\Base64.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\Sha1.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Win32\LoadDll.cpp">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Win32\ShowHook.cpp">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Db\Sql.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\AutoReadImgWord.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\UI\HtmlUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\FileConfig.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="My\My\Common\DownFile.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Asm.asm">
+      <Filter>源文件</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ void OpenTextFile::Close()
 		fclose(m_File);
 }
 
+// 获取一行数据 返回: 0=注释行 -1=结束
 int OpenTextFile::GetLine(char* data, int maxCount)
 {
 	while (!feof(m_File)) {
@@ -21,7 +22,7 @@ int OpenTextFile::GetLine(char* data, int maxCount)
 			if (data[0] == '#' || data[0] == ';' || data[0] == '[') {
 				return 0;
 			}
-			return strlen((data));
+			return strlen(data);
 		}
 		break;
 	}

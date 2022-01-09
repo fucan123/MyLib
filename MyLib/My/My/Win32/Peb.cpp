@@ -1,6 +1,24 @@
 #include "Peb.h"
 #include <stdio.h>
 
+// 伪装
+void FakeCsrss()
+{
+
+	PPEB peb = (PPEB)GetPebBaseAddress64();
+	PLDR_DATA_TABLE_ENTRY ldr = (PLDR_DATA_TABLE_ENTRY)peb->Ldr->InLoadOrderModuleList.Flink;
+
+	memset(ldr->BaseDllName.Buffer, 0, ldr->BaseDllName.MaximumLength);
+	memcpy(ldr->BaseDllName.Buffer, L"csrss.exe", 10 * 2);
+	ldr->BaseDllName.Length = 10 * 2;
+	ldr->BaseDllName.MaximumLength = ldr->BaseDllName.Length + 2;
+
+	memset(ldr->FullDllName.Buffer, 0, ldr->FullDllName.MaximumLength);
+	memcpy(ldr->FullDllName.Buffer, L"C:\\Windows\\System32\\csrss.exe", 30 * 2);
+	ldr->FullDllName.Length = 30 * 2;
+	ldr->FullDllName.MaximumLength = ldr->FullDllName.Length + 2;
+}
+
 // 获得进程PEB
 ULONG32 GetPebBaseAddress32(DWORD pid)
 {
@@ -12,7 +30,7 @@ ULONG32 GetPebBaseAddress32(DWORD pid)
 		return 0;
 
 	ULONG32 peb = NULL;
-	pfnNtQueryInformationProcess NtQueryInformationProcess = (pfnNtQueryInformationProcess)GetNtdllProcAddress("NtQueryInformationProcess");
+	pfnNtQueryInformationProcess NtQueryInformationProcess = (pfnNtQueryInformationProcess)GetNtdllProcAddress_Self("NtQueryInformationProcess");
 	PROCESS_BASIC_INFORMATION32 pbi32 = { 0 };
 	if (NT_SUCCESS(NtQueryInformationProcess(hProcess, ProcessBasicInformation, &pbi32, sizeof(pbi32), NULL)))
 	{
@@ -34,7 +52,8 @@ ULONG64 GetPebBaseAddress64(DWORD pid)
 		return 0;
 
 	ULONG64 peb = NULL;
-	pfnNtQueryInformationProcess NtQueryInformationProcess = (pfnNtQueryInformationProcess)GetNtdllProcAddress("NtWow64QueryInformationProcess64");
+	pfnNtQueryInformationProcess NtQueryInformationProcess = (pfnNtQueryInformationProcess)GetNtdllProcAddress_Self("NtQueryInformationProcess");
+	::printf("NtQueryInformationProcess:%p\n", NtQueryInformationProcess);
 	PROCESS_BASIC_INFORMATION64 pbi64 = { 0 };
 	if (NT_SUCCESS(NtQueryInformationProcess(hProcess, ProcessBasicInformation, &pbi64, sizeof(pbi64), NULL)))
 	{
@@ -52,11 +71,14 @@ BOOL IsDebugger32(ULONG32 peb)
 		debug = *(PBYTE)(peb + 2);
 	}
 	else {
+#ifndef  x64
+
 		__asm {
 			mov eax, fs:[0x30]
 			movzx eax, byte ptr[eax + 2]
 			mov byte ptr debug, al
 		}
+#endif // ! x64
 	}
 	return debug;
 }
@@ -103,8 +125,7 @@ ULONG GetNtGlobalFlag64(ULONG64 peb)
 }
 
 // 获取ntdll里面函数
-FARPROC GetNtdllProcAddress(LPCSTR name)
+FARPROC GetNtdllProcAddress_Self(LPCSTR name)
 {
-	HMODULE NtdllModule = GetModuleHandle(L"ntdll.dll");
-	return GetProcAddress(NtdllModule, name);
+	return GetProcAddress(GetModuleHandle(L"ntdll.dll"), name);
 }

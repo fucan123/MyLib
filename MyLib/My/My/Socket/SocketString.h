@@ -21,12 +21,12 @@ public:
 	SocketString& SetInt(int value);
 	SocketString& SetInt(int index, int value);
 	SocketString& SetContent(void* ptr, int len); // …Ë÷√ƒ⁄»›
-	char* MakeSendString(int opcode);
+	char* MakeSendString(int opcode, int type=1);
 	char* GetSendString() { return m_SendString.value; }
 	int   GetSendLength() { return m_SendString.length; }
 	void  SetRecvString(const char* string);
 	int   GetRecvValueInt(const char* key, int default_value=0);
-	char* GetRecvValue(const char* key);
+	const char* GetRecvValue(const char* key);
 	void ClearSendString() {
 		m_SendString.value[0] = 0;
 		m_SendString.length = 0;

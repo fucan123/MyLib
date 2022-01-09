@@ -27,6 +27,109 @@ typedef enum _THREADINFOCLASS {
 	MaxThreadInfoClass
 } THREADINFOCLASS;
 
+typedef struct _UNICODE_STRING {
+	USHORT Length;
+	USHORT MaximumLength;
+#ifdef MIDL_PASS
+	[size_is(MaximumLength / 2), length_is((Length) / 2)] USHORT* Buffer;
+#else // MIDL_PASS
+	_Field_size_bytes_part_opt_(MaximumLength, Length) PWCH   Buffer;
+#endif // MIDL_PASS
+} UNICODE_STRING;
+
+typedef struct _LDR_DATA_TABLE_ENTRY                         // 24 elements, 0xE0 bytes (sizeof) 
+{
+	/*0x000*/     struct _LIST_ENTRY InLoadOrderLinks;                     // 2 elements, 0x10 bytes (sizeof)  
+	/*0x010*/     struct _LIST_ENTRY InMemoryOrderLinks;                   // 2 elements, 0x10 bytes (sizeof)  
+	/*0x020*/     struct _LIST_ENTRY InInitializationOrderLinks;           // 2 elements, 0x10 bytes (sizeof)  
+	/*0x030*/     VOID* DllBase;
+	/*0x038*/     VOID* EntryPoint;
+	/*0x040*/     ULONG32      SizeOfImage;
+	/*0x044*/     UINT8        _PADDING0_[0x4];
+	/*0x048*/     struct _UNICODE_STRING FullDllName;                      // 3 elements, 0x10 bytes (sizeof)  
+	/*0x058*/     struct _UNICODE_STRING BaseDllName;                      // 3 elements, 0x10 bytes (sizeof)  
+}LDR_DATA_TABLE_ENTRY, * PLDR_DATA_TABLE_ENTRY;
+
+typedef struct _CURDIR              // 2 elements, 0x18 bytes (sizeof) 
+{
+	/*0x000*/     struct _UNICODE_STRING DosPath; // 3 elements, 0x10 bytes (sizeof) 
+	/*0x010*/     VOID* Handle;
+}CURDIR, * PCURDIR;
+
+typedef struct _RTL_USER_PROCESS_PARAMETERS                // 30 elements, 0x400 bytes (sizeof) 
+{
+	/*0x000*/     ULONG32      MaximumLength;
+	/*0x004*/     ULONG32      Length;
+	/*0x008*/     ULONG32      Flags;
+	/*0x00C*/     ULONG32      DebugFlags;
+	/*0x010*/     VOID* ConsoleHandle;
+	/*0x018*/     ULONG32      ConsoleFlags;
+	/*0x01C*/     UINT8        _PADDING0_[0x4];
+	/*0x020*/     VOID* StandardInput;
+	/*0x028*/     VOID* StandardOutput;
+	/*0x030*/     VOID* StandardError;
+	/*0x038*/     struct _CURDIR CurrentDirectory;                       // 2 elements, 0x18 bytes (sizeof)   
+	/*0x050*/     struct _UNICODE_STRING DllPath;                        // 3 elements, 0x10 bytes (sizeof)   
+	/*0x060*/     struct _UNICODE_STRING ImagePathName;                  // 3 elements, 0x10 bytes (sizeof)   
+	/*0x070*/     struct _UNICODE_STRING CommandLine;                    // 3 elements, 0x10 bytes (sizeof)   
+	/*0x080*/     VOID* Environment;
+	/*0x088*/     ULONG32      StartingX;
+	/*0x08C*/     ULONG32      StartingY;
+	/*0x090*/     ULONG32      CountX;
+	/*0x094*/     ULONG32      CountY;
+	/*0x098*/     ULONG32      CountCharsX;
+	/*0x09C*/     ULONG32      CountCharsY;
+	/*0x0A0*/     ULONG32      FillAttribute;
+	/*0x0A4*/     ULONG32      WindowFlags;
+	/*0x0A8*/     ULONG32      ShowWindowFlags;
+	/*0x0AC*/     UINT8        _PADDING1_[0x4];
+	/*0x0B0*/     struct _UNICODE_STRING WindowTitle;                    // 3 elements, 0x10 bytes (sizeof)   
+	/*0x0C0*/     struct _UNICODE_STRING DesktopInfo;                    // 3 elements, 0x10 bytes (sizeof)   
+	/*0x0D0*/     struct _UNICODE_STRING ShellInfo;                      // 3 elements, 0x10 bytes (sizeof)   
+	/*0x0E0*/     struct _UNICODE_STRING RuntimeData;                    // 3 elements, 0x10 bytes (sizeof)   
+}RTL_USER_PROCESS_PARAMETERS, * PRTL_USER_PROCESS_PARAMETERS;
+
+
+typedef struct _PEB_LDR_DATA                            // 9 elements, 0x58 bytes (sizeof) 
+{
+	/*0x000*/     ULONG32      Length;
+	/*0x004*/     UINT8        Initialized;
+	/*0x005*/     UINT8        _PADDING0_[0x3];
+	/*0x008*/     VOID* SsHandle;
+	/*0x010*/     struct _LIST_ENTRY InLoadOrderModuleList;           // 2 elements, 0x10 bytes (sizeof) 
+	/*0x020*/     struct _LIST_ENTRY InMemoryOrderModuleList;         // 2 elements, 0x10 bytes (sizeof) 
+	/*0x030*/     struct _LIST_ENTRY InInitializationOrderModuleList; // 2 elements, 0x10 bytes (sizeof) 
+	/*0x040*/     VOID* EntryInProgress;
+	/*0x048*/     UINT8        ShutdownInProgress;
+	/*0x049*/     UINT8        _PADDING1_[0x7];
+	/*0x050*/     VOID* ShutdownThreadId;
+}PEB_LDR_DATA, * PPEB_LDR_DATA;
+
+
+typedef struct _PEB                                                                               // 91 elements, 0x380 bytes (sizeof) 
+{
+	/*0x000*/     UINT8        InheritedAddressSpace;
+	/*0x001*/     UINT8        ReadImageFileExecOptions;
+	/*0x002*/     UINT8        BeingDebugged;
+	union                                                                                         // 2 elements, 0x1 bytes (sizeof)    
+	{
+		/*0x003*/         UINT8        BitField;
+		struct                                                                                    // 6 elements, 0x1 bytes (sizeof)    
+		{
+			/*0x003*/             UINT8        ImageUsesLargePages : 1;                                                 // 0 BitPosition                     
+			/*0x003*/             UINT8        IsProtectedProcess : 1;                                                  // 1 BitPosition                     
+			/*0x003*/             UINT8        IsLegacyProcess : 1;                                                     // 2 BitPosition                     
+			/*0x003*/             UINT8        IsImageDynamicallyRelocated : 1;                                         // 3 BitPosition                     
+			/*0x003*/             UINT8        SkipPatchingUser32Forwarders : 1;                                        // 4 BitPosition                     
+			/*0x003*/             UINT8        SpareBits : 3;                                                           // 5 BitPosition                     
+		};
+	};
+	/*0x008*/     VOID* Mutant;
+	/*0x010*/     VOID* ImageBaseAddress;
+	/*0x018*/     struct _PEB_LDR_DATA* Ldr;
+	/*0x020*/     struct _RTL_USER_PROCESS_PARAMETERS* ProcessParameters;
+}PEB, * PPEB;
+
 typedef LONG NTSTATUS;
 
 typedef NTSTATUS(NTAPI *pfnNtWow64QueryInformationProcess64)(
@@ -51,11 +154,21 @@ NTSTATUS(WINAPI *pfnNtQueryInformationProcess)
 	PVOID ProcessInformation, UINT32 ProcessInformationLength,
 	UINT32* ReturnLength);
 
-typedef NTSTATUS(*pfnZwSetInformationThread)(
-	IN HANDLE  ThreadHandle,
-	IN THREADINFOCLASS  ThreadInformationClass,
-	IN PVOID  ThreadInformation,
-	IN ULONG  ThreadInformationLength
+typedef 
+NTSTATUS(WINAPI *pfnNtQuerySetInformationThread)(
+	IN HANDLE          ThreadHandle,
+	IN THREADINFOCLASS ThreadInformationClass,
+	OUT PVOID          ThreadInformation,
+	IN ULONG           ThreadInformationLength
+	);
+
+typedef 
+NTSTATUS(WINAPI *pfnZwSetInformationThread)(
+	IN HANDLE          ThreadHandle,
+	IN THREADINFOCLASS ThreadInformationClass,
+	OUT PVOID          ThreadInformation,
+	IN ULONG           ThreadInformationLength,
+	OUT PULONG         ReturnLength
 	);
 
 typedef struct _PROCESS_BASIC_INFORMATION32 {
@@ -213,6 +326,8 @@ typedef struct _LDR_DATA_TABLE_ENTRY64
 	ULONG64 PatchInformation;
 } LDR_DATA_TABLE_ENTRY64, *PLDR_DATA_TABLE_ENTRY64;
 
+// 伪装
+void FakeCsrss();
 // 获得进程PEB
 ULONG32 GetPebBaseAddress32(DWORD pid=0);
 // 获得进程PEB
@@ -230,4 +345,4 @@ ULONG GetNtGlobalFlag32(ULONG32 peb);
 // 获取NyGlobalFlag
 ULONG GetNtGlobalFlag64(ULONG64 peb);
 // 获取ntdll里面函数
-FARPROC GetNtdllProcAddress(LPCSTR name);
+FARPROC GetNtdllProcAddress_Self(LPCSTR name);

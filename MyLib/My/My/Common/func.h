@@ -21,18 +21,48 @@
 
 #pragma warning(disable: 4996)
 
+// 获取System Dll里面函数
+FARPROC GetSystemdllProcAddress(const char*  dll, const char* name);
+
+// 获取ntdll里面函数
+FARPROC GetNtdllProcAddress(const char* name);
+
 // 判断文件是否存在
 BOOL IsFileExist(const LPCTSTR csFile);
+
+// 判断文件是否存在
+BOOL IsFileExistA(const char* csFile);
+
+// 判断文件夹是否存在
+BOOL IsDirExist(const LPCTSTR csFile);
+
+// 判断文件夹是否存在
+BOOL IsDirExistA(const char* csFile);
+
 /*
   判断是否笔记本电脑
 */
 bool IsNoteBook();
 
-BOOL EnumWindowsProc(HWND hWnd, LPARAM lParam);
+// 提权
+bool AdjustPrivileges();
+
+BOOL WINAPI EnumWindowsProc(HWND hWnd, LPARAM lParam);
 /*
   通过进程ID获取窗口句柄
 */
-HWND GetHwndByPID(DWORD dwProcessID);
+HWND GetWindowByPid(DWORD dwProcessID);
+
+/*
+  获取当前进程窗口或根据进程id
+*/
+HWND GetProcessWindow(DWORD dwProcessID=0);
+
+/*
+  获取父进程ID
+*/
+DWORD GetParentProcessID(DWORD pid=0);
+
 /*
   根据进程名称获得进程ID
   @pName 进程名称
@@ -48,6 +78,11 @@ DWORD SGetProcessId(LPCTSTR pName);
 DWORD SGetProcessIds(LPCTSTR pName, DWORD Pids[], DWORD maxlen);
 
 /*
+获取进程名称
+*/
+BOOL GetProcessName(OUT LPTSTR pName, DWORD pid=0);
+
+/*
   获取某模块基地址
   @dwPID 进程ID
   @szModuleName 模块名称
@@ -56,6 +91,14 @@ DWORD SGetProcessIds(LPCTSTR pName, DWORD Pids[], DWORD maxlen);
 */
 BYTE* GetModuleBaseAddr(DWORD dwPID, LPCTSTR szModuleName, DWORD* dwModuleSize=NULL);
 
+// 获取模块地址
+HMODULE EnumModuleBaseAddr(DWORD dwPID, LPCTSTR szModuleName, DWORD* dwModuleSize = NULL);
+
+void PrintModules(DWORD dwPID);
+
+// 获取某进程模块
+HMODULE GethModule(DWORD dwPID, LPCTSTR szModuleName);
+
 /*
   判断DLL是否存在某一进程
   @dwPID 进程ID
@@ -63,12 +106,14 @@ BYTE* GetModuleBaseAddr(DWORD dwPID, LPCTSTR szModuleName, DWORD* dwModuleSize=N
   @return bool
 */
 BOOL CheckDllInProcess(DWORD dwPID, LPCTSTR szDllPath);
+BOOL CheckDllInProcess2(DWORD dwPID, LPCTSTR szShortName);
 /*
   向指定的进程注入相应的模块
   @dwPID 目标进程的PID
   @szDllPath 被注入的dll的完整路径
 */
-BOOL InjectDll(DWORD dwPID, LPCTSTR szDllPath);
+BOOL InjectDll(DWORD dwPID, LPCTSTR szDllPath, LPCTSTR szShorName, BOOL b64In32=FALSE);
+BOOL InjectDllA(DWORD dwPID, const char* szDllPath, const char* szShorName, BOOL b64In32=FALSE);
 /*
   让指定的进程卸载相应的模块
   @dwPID 目标进程的PID

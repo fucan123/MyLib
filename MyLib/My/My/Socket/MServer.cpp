@@ -1,7 +1,7 @@
 #include "MServer.h"
 #include <stdio.h>
 
-void MServer::Listen(USHORT port)
+void MServer::Listen(USHORT port, int af)
 {
 	WSADATA     wsaData;
 	SOCKET      sListen, sClient;
@@ -11,17 +11,23 @@ void MServer::Listen(USHORT port)
 
 	WSAStartup(0x0202, &wsaData);
 
-	sListen = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sListen = socket(af, SOCK_STREAM, IPPROTO_TCP);
 
 	local.sin_addr.S_un.S_addr = htonl(0);
-	local.sin_family = AF_INET;
+	local.sin_family = af;
 	local.sin_port = htons(port);
 	bind(sListen, (struct sockaddr *)&local, sizeof(SOCKADDR_IN));
 
-	listen(sListen, 3);
-	//CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)the_main_test, NULL, 0, &dwThreadId);
+	if (listen(sListen, 3) == -1) {
+		printf("监听失败, 错误码:%d\n", WSAGetLastError());
+		char msg[64];
+		sprintf_s(msg, "服务启动失败, 错误码:%d", GetLastError());
+		::MessageBoxA(NULL, msg, "提示", MB_OK);
+		return;
+	}
+	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ReadMsg, this, 0, &dwThreadId);
 	//CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)WebSocket::run, this, 0, &dwThreadId);
-	printf("listen!\n");
+	//printf("listen!\n");
 
 	while (true) {
 		sClient = accept(sListen, (struct sockaddr *)&client, &iaddrSize);
@@ -44,7 +50,7 @@ void MServer::Listen(USHORT port)
 			this->onconect(sClient, client, count - 1);
 		}
 
-		printf("连接: %d\n", count);
+		//printf("连接: %d，%d\n", count, sClient);
 	}
 
 	closesocket(sListen);
@@ -70,7 +76,7 @@ void MServer::Close(SOCKET scoket, int index)
 		this->cons[max_index].socket = 0;
 		this->cons[max_index].addr = 0;
 	}
-	
+
 	closesocket(tmp);
 }
 
@@ -79,6 +85,7 @@ UINT MServer::ReadMsg(MServer* $this)
 	fd_set         fdread;
 	struct timeval tv = { 1, 200 };
 	while (true) {
+		Sleep(1);
 		FD_ZERO(&fdread);
 		for (int i = 0; i < $this->count; i++) {
 			//printf("xxx:%d\n", i);
@@ -99,19 +106,21 @@ UINT MServer::ReadMsg(MServer* $this)
 				}
 				//printf("$:%d\n", ret);
 				char recv_data[1024];
-				ret = recv($this->cons[i].socket, recv_data, 5, 0);
+				ret = recv($this->cons[i].socket, recv_data, 4, 0);
 				if (ret <= 0) {
 					//printf("客户端关闭2\n");
 					$this->Close($this->cons[i].socket, i);
 					continue;
 				}
 
-				int length = atoi(recv_data) - 5;
+				int length = s_n2hi(recv_data) - 4;
+				//printf("length:s_n2hi%d\n", length);
 				if (length >= 0) {
 					int ret = recv($this->cons[i].socket, recv_data, length, 0);
 					if (ret > 0) {
 						recv_data[ret] = 0;
-						$this->onread(recv_data, i);
+						int opcode = s_n2hi(&recv_data[0]);
+						$this->onread($this->cons[i].socket, i, opcode, &recv_data[4], ret - 4);
 					}
 				}
 				//printf("p:%d, length:%d\n", ret, length);

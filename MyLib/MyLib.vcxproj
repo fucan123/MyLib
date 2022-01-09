@@ -23,32 +23,32 @@
     <ProjectGuid>{09EC01B7-E904-4E08-8D96-2A9F43809FD2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MyLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -88,8 +88,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,7 +106,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;x64;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -121,8 +122,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -142,7 +144,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_AFXDLL;x64;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -153,47 +155,101 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Asm.h" />
+    <ClInclude Include="My\My\Common\AutoReadImgWord.h" />
+    <ClInclude Include="My\My\Common\Base64.h" />
+    <ClInclude Include="My\My\Common\C.h" />
+    <ClInclude Include="My\My\Common\Des.h" />
+    <ClInclude Include="My\My\Common\DownFile.h" />
+    <ClInclude Include="My\My\Common\EncryptString.h" />
     <ClInclude Include="My\My\Common\Explode.h" />
+    <ClInclude Include="My\My\Common\FileConfig.h" />
     <ClInclude Include="My\My\Common\func.h" />
     <ClInclude Include="My\My\Common\HttpClient.h" />
     <ClInclude Include="My\My\Common\Json.h" />
     <ClInclude Include="My\My\Common\Link.hpp" />
+    <ClInclude Include="My\My\Common\MachineID.h" />
+    <ClInclude Include="My\My\Common\MachineID2.h" />
+    <ClInclude Include="My\My\Common\md5.h" />
+    <ClInclude Include="My\My\Common\MString.h" />
     <ClInclude Include="My\My\Common\mystring.h" />
     <ClInclude Include="My\My\Common\OpenTextFile.h" />
     <ClInclude Include="My\My\Common\PregMatch.h" />
+    <ClInclude Include="My\My\Common\SeeImgNum.h" />
+    <ClInclude Include="My\My\Common\Sha1.h" />
+    <ClInclude Include="My\My\Db\Sql.h" />
+    <ClInclude Include="My\My\Db\Sqlite.h" />
+    <ClInclude Include="My\My\Db\sqlite3.h" />
     <ClInclude Include="My\My\Driver\KbdMou.h" />
     <ClInclude Include="My\My\Driver\Sys.h" />
     <ClInclude Include="My\My\Driver\JumpSafe.h" />
     <ClInclude Include="My\My\Socket\Client.h" />
+    <ClInclude Include="My\My\Socket\HttpSocket.h" />
     <ClInclude Include="My\My\Socket\MServer.h" />
     <ClInclude Include="My\My\Socket\SocketString.h" />
+    <ClInclude Include="My\My\UI\HtmlUI.h" />
+    <ClInclude Include="My\My\UI\HtmlUIData.h" />
+    <ClInclude Include="My\My\UI\wke.h" />
     <ClInclude Include="My\My\Win32\Hook.h" />
+    <ClInclude Include="My\My\Win32\LoadDll.h" />
+    <ClInclude Include="My\My\Win32\PE.h" />
     <ClInclude Include="My\My\Win32\Peb.h" />
+    <ClInclude Include="My\My\Win32\ShowHook.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="My\My\Common\AutoReadImgWord.cpp" />
+    <ClCompile Include="My\My\Common\Base64.cpp" />
+    <ClCompile Include="My\My\Common\C.cpp" />
+    <ClCompile Include="My\My\Common\Des.cpp" />
+    <ClCompile Include="My\My\Common\DownFile.cpp" />
+    <ClCompile Include="My\My\Common\EncryptString.cpp" />
     <ClCompile Include="My\My\Common\Explode.cpp" />
+    <ClCompile Include="My\My\Common\FileConfig.cpp" />
     <ClCompile Include="My\My\Common\func.cpp" />
     <ClCompile Include="My\My\Common\HttpClient.cpp" />
     <ClCompile Include="My\My\Common\Json.cpp" />
+    <ClCompile Include="My\My\Common\MachineID.cpp" />
+    <ClCompile Include="My\My\Common\MachineID2.cpp" />
+    <ClCompile Include="My\My\Common\md5.cpp" />
+    <ClCompile Include="My\My\Common\MString.cpp" />
     <ClCompile Include="My\My\Common\mystring.cpp" />
     <ClCompile Include="My\My\Common\OpenTextFile.cpp" />
     <ClCompile Include="My\My\Common\PregMatch.cpp" />
+    <ClCompile Include="My\My\Common\SeeImgNum.cpp" />
+    <ClCompile Include="My\My\Common\Sha1.cpp" />
+    <ClCompile Include="My\My\Db\Sql.cpp" />
+    <ClCompile Include="My\My\Db\Sqlite.cpp" />
+    <ClCompile Include="My\My\Db\sqlite3.c" />
     <ClCompile Include="My\My\Driver\KbdMou.cpp" />
     <ClCompile Include="My\My\Driver\Sys.cpp" />
     <ClCompile Include="My\My\Driver\JumpSafe.cpp" />
     <ClCompile Include="My\My\Socket\Client.cpp" />
+    <ClCompile Include="My\My\Socket\HttpSocket.cpp" />
     <ClCompile Include="My\My\Socket\MServer.cpp" />
     <ClCompile Include="My\My\Socket\SocketString.cpp" />
+    <ClCompile Include="My\My\UI\HtmlUI.cpp" />
     <ClCompile Include="My\My\Win32\Hook.cpp" />
+    <ClCompile Include="My\My\Win32\LoadDll.cpp" />
+    <ClCompile Include="My\My\Win32\PE.cpp" />
     <ClCompile Include="My\My\Win32\Peb.cpp" />
+    <ClCompile Include="My\My\Win32\ShowHook.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Asm.asm">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(fileName).obj</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(fileName).obj</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

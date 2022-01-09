@@ -11,7 +11,10 @@ HTTP_STATUS HttpClient::Request(WCHAR* host, WCHAR* path, CString& result, int t
 		//MessageBox(NULL, m_SendParam, L"发送的参数", MB_OK);
 		CHttpConnection* pServer = session.GetHttpConnection(host, (INTERNET_PORT)HOST_PORT);
 		CHttpFile* pFile = pServer->OpenRequest(type, path, NULL, 1, NULL, NULL, INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_NO_COOKIES);
-		pFile->AddRequestHeaders(L"Content-Type: application/x-www-form-urlencoded");
+		if (type == HTTP_POST) {
+			pFile->AddRequestHeaders(L"Content-Type: application/x-www-form-urlencoded");
+		}
+		
 		if (!m_Cookie.IsEmpty()) {
 			CString cookie = L"Cookie: JSESSIONID=";
 			cookie += m_Cookie;
@@ -23,13 +26,14 @@ HTTP_STATUS HttpClient::Request(WCHAR* host, WCHAR* path, CString& result, int t
 		// 开始发送请求
 		pFile->SendRequest(NULL, 0, param, strlen(param));
 		pFile->QueryInfoStatusCode(status);
-		printf("HTTP CODE:%d\n", status);
+		printf("HTTP CODE: %d\n", status);
 		if (status == HTTP_STATUS_OK) {
 			CString newline;
+			//printf("newline:%ws\n", newline);
 			while (pFile->ReadString(newline)) { // 循环读取每行内容 
 				result += newline + "\r\n";
 			}
-			printf("内容:%s\n", result.GetBuffer()); // 显示返回内容 
+			//printf("内容:%s\n", result.GetBuffer()); // 显示返回内容 
 		}
 
 		if (pFile)

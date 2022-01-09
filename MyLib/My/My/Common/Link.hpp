@@ -9,6 +9,7 @@ struct NODE
 	type  value; // 值
 	NODE* prev;  // 上一个指针
 	NODE* next;  // 下一个指针
+	int   index; // 索引
 };
 
 template <typename type>
@@ -69,6 +70,7 @@ NODE<type>* Link<type>::Add(type value)
 	p->value = value;
 	p->prev = m_last;
 	p->next = nullptr;
+	p->index = m_count;
 
 	if (!m_head) {
 		m_head = p;

@@ -9,11 +9,12 @@ void Client::Connect(const char* host, USHORT port)
 	SOCKADDR_IN server_in;
 	int         iaddrSize = sizeof(SOCKADDR_IN);
 	DWORD       dwThreadId;
-
+	EWOULDBLOCK;
 	WSAStartup(0x0202, &wsaData);
 
 	socket_client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
+	WSAGetLastError();
 	server_in.sin_addr.S_un.S_addr = inet_addr(host);
 	server_in.sin_family = AF_INET;
 	server_in.sin_port = htons(port);

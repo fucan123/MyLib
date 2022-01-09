@@ -5,6 +5,24 @@
 #include <time.h>
 #include <windows.h>
 
+// 比较两个字符串是否相等
+bool streq(const char* str_1, const char* str_2)
+{
+	while (true) {
+		if (*str_1 != *str_2) {
+			return false;
+		}
+		else {
+			if (*str_1 == 0)
+				break;
+		}
+
+		str_1++;
+		str_2++;
+	}
+	return true;
+}
+
 //比较两个字符串是否相等, len=比较的长度
 bool strneq(const char* str_1, const char* str_2, unsigned int len) { 
 	for (unsigned int i = 0; i < len; i++) {
@@ -105,7 +123,7 @@ char* rtrim(char* string, char ch)
 	return string;
 }
 
-// 替换字符
+// 替换字符 把find替换成rep
 char* replace(char* string, char find, char rep)
 {
 	if (rep) {
@@ -147,6 +165,48 @@ char* replace(char* string, char find, char rep)
 	return string;
 }
 
+// 替换字符 finds=要替换的数组 finds_length=要替换的数组长度
+char* replace(char* string, char finds[], int finds_length, char rep)
+{
+	if (rep) {
+		for (char* p = string; *p; p++) {
+			bool eq = false;
+			for (int i = 0; i < finds_length; i++) {
+				if (finds[i] == *p) {
+					eq = true;
+					break;
+				}
+			}
+			if (eq) {
+				*p = rep;
+			}
+		}
+	}
+	else {
+		for (char* p = string; *p; p++) {
+
+			bool eq = false;
+			for (int i = 0; i < finds_length; i++) {
+				if (finds[i] == *p) {
+					eq = true;
+					break;
+				}
+			}
+			if (eq) {
+				int i = 0;
+				char* p2 = p + 1;
+				for (; p2[i]; i++) {
+					p[i] = p2[i];
+				}
+				p[i] = p2[i];
+
+				p--;
+			}
+		}
+	}
+	return string;
+}
+
 char* copy_str(char* start, char* end) {
 	int len = end - start;
 	if (len <= 0) {
@@ -170,8 +230,39 @@ char* copy_str(char* start, char* end) {
 	return str;
 }
 
+// 获取中间的字符
+char* get_mid_str(char* res, const char* source, const char* start, const char* end, bool fmt)
+{
+	res[0] = 0;
+	const char* s = strstr(source, start);
+	if (!s) {
+		return res;
+	}
+	s += strlen(start);
 
-int strpos(char* text, char* need, unsigned int start, unsigned int end) { //查找字符串need在text出现的位置[0起始], start=开始搜索位置, end=结束搜索位置
+	const char* e = 0;
+	if (end) {
+		e = strstr(source, end);
+	}
+
+	int i = 0;
+	for (; *s; s++, i++) {
+		if (e && s == e)
+			break;
+
+		res[i] = *s;
+	}
+	res[i] = 0;
+
+	if (fmt) {
+		trim(res);
+	}
+
+	return res;
+}
+
+//查找字符串need在text出现的位置[0起始], start=开始搜索位置, end=结束搜索位置
+int strpos(char* text, char* need, unsigned int start, unsigned int end) { 
 	if (end > 0) {
 		end += (unsigned int)text + 1;
 	}
@@ -272,7 +363,7 @@ __int64 ctoi64(const char* data)
 /*
  复制int32到内存
 */
-char* copy_i32(char * dst, int v)
+char* copy_i32(char* dst, int v)
 {
 	for (int i = 0; i < 4; i++) { 
 		dst[i] = (v >> (i * 8)) & 0xff;
@@ -283,7 +374,7 @@ char* copy_i32(char * dst, int v)
 /*
  复制int32（转成网络字节）到内存
 */
-char* copy_i32_net(char * dst, int v)
+char* copy_i32_net(char* dst, int v)
 {
 	for (int i = 0; i < 4; i++) { 
 		dst[i] = (v >> ((3 - i) * 8)) & 0xff;
@@ -294,7 +385,7 @@ char* copy_i32_net(char * dst, int v)
 /*
  复制int64到内存
 */
-char* copy_i64(char * dst, __int64 v)
+char* copy_i64(char* dst, __int64 v)
 {
 	for (int i = 0; i < 8; i++) {
 		dst[i] = (v >> (i * 8)) & 0xff;
@@ -305,7 +396,7 @@ char* copy_i64(char * dst, __int64 v)
 /*
  复制int64（转成网络字节）到内存
 */
- char* copy_i64_net(char * dst, __int64 v)
+ char* copy_i64_net(char* dst, __int64 v)
  {
 	 for (int i = 0; i < 8; i++) {
 		 dst[i] = (v >> ((7 - i) * 8)) & 0xff;
@@ -316,7 +407,7 @@ char* copy_i64(char * dst, __int64 v)
  /*
 utf8转成gb2312
 */
- char* Utf82GB2312(const char* utf8)
+char* Utf82GB2312(const char* utf8)
 {
 	int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
 	wchar_t* wstr = new wchar_t[len + 1];
@@ -326,6 +417,23 @@ utf8转成gb2312
 	char* str = new char[len + 1];
 	memset(str, 0, len + 1);
 	WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, len, NULL, NULL);
+	if (wstr) delete[] wstr;
+	return str;
+}
+
+/*
+gb2312转成utf8
+*/
+char* GB23122Utf8(const char* gb2312)
+{
+	int len = MultiByteToWideChar(CP_ACP, 0, gb2312, -1, NULL, 0);
+	wchar_t* wstr = new wchar_t[len + 1];
+	memset(wstr, 0, len + 1);
+	MultiByteToWideChar(CP_ACP, 0, gb2312, -1, wstr, len);
+	len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+	char* str = new char[len + 1];
+	memset(str, 0, len + 1);
+	WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, NULL, NULL);
 	if (wstr) delete[] wstr;
 	return str;
 }
@@ -379,4 +487,144 @@ int getday(int* hour)
 	}
 
 	return t.tm_mday;
+}
+
+/* 宽字符转字符 */
+char* wchar2char(const wchar_t* str)
+{
+	char * m_char;
+	int len = WideCharToMultiByte(CP_ACP, 0, str, wcslen(str), NULL, 0, NULL, NULL);
+	m_char = new char[len + 1];
+	WideCharToMultiByte(CP_ACP, 0, str, wcslen(str), m_char, len, NULL, NULL);
+	m_char[len] = '\0';
+	return m_char;
+}
+
+/* 时间转成字符串 */
+char* time2str(char save[], int s, int utc)
+{
+	tm t;
+	time_t nm = s + utc * 3600;
+	gmtime_s(&t, &nm);
+	sprintf(save, "%d-%02d-%02d %02d:%02d:%02d", t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
+	return save;
+}
+
+/* 转成小写 */
+char* strtolower(char* str)
+{
+	for (int i = 0; str[i]; i++) {
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] += 32;
+	}
+	return str;
+}
+
+
+/* 转成大写 */
+char* strtoupper(char* str)
+{
+	for (int i = 0; str[i]; i++) {
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] -= 32;
+	}
+	return str;
+}
+
+/* 是否数字 */
+bool is_number(const char* str)
+{
+	if (*str == '-') str++;
+	for (; *str; str++) {
+		if (*str < '0' || *str > '9')
+			return false;
+	}
+	return true;
+}
+
+/* 是否十六进制 */
+bool is_hex(const char * str)
+{
+	if (*str == '0') {
+		str++;
+		if (*str != 'x' && *str != 'X')
+			return false;
+
+		str++;
+	}
+	for (; *str; str++) {
+		if (*str < 'A' || *str > 'z')
+			return false;
+		if (*str > 'Z' && *str < 'a')
+			return false;
+	}
+	return true;
+}
+
+/*  十六进制转整型 length=转换字符串之长度 */
+int hex2int(const char* str, int length)
+{
+	if (str == nullptr)
+		return 0;
+
+	if (str[0] == '0') {
+		if (str[1] == 'x' || str[1] == 'X')
+			str += 2;
+	}
+
+	int i = 0;
+	int num = 0;
+	while (*str) {
+		char ch = *str;
+		if (ch >= '0' && ch <= '9') {
+			ch = ch - '0';
+		}
+		else if (ch >= 'A' && ch <= 'F') {
+			ch = ch - 'A' + 0x0A;
+		}
+		else if (ch >= 'a' && ch <= 'f') {
+			ch = ch - 'a' + 0x0a;
+		}
+		else {
+			ch = 0;
+			break;
+		}
+
+		num = num * 0x10 + ch;
+		if (length > 0 && (++i >= length))
+			break;
+
+		str++;
+	}
+	return num;
+}
+
+/* 十六进制字符转成字符 */
+int hexstr2char(char* save, const char* str, int length)
+{
+	if (length & 0x01) {
+		return 0;
+	}
+
+	length /= 2;
+	for (int i = 0; i < length; i++) {
+		save[i] = hex2int(&str[i * 2], 2);
+	}
+	save[length] = 0;
+
+	return length;
+}
+
+/* 转成十六进制 return=save大小 */
+int char2hex(char* save, const char* str, int length)
+{
+	for (int i = 0, j = 0; i < length; i++, j += 2) {
+		char tmp[3];
+		sprintf_s(tmp, "%02x", str[i]&0xff);
+		save[j] = tmp[0];
+		save[j + 1] = tmp[1];
+	}
+	save[length * 2] = 0;
+
+	return length * 2;
 }

@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define MAX_LENGTH 4096
+#define MAX_LENGTH (1440*900*4)
 
 SocketString::SocketString()
 {
@@ -23,7 +23,7 @@ SocketString& SocketString::SetKeyValue(const char* key, int value)
 	return SetKeyValue(key, string);
 }
 
-SocketString& SocketString::SetKeyValue(const char * key, float value)
+SocketString& SocketString::SetKeyValue(const char* key, float value)
 {
 	char string[16];
 	sprintf_s(string, "%.2f", value);
@@ -47,7 +47,7 @@ SocketString& SocketString::SetKeyValue(const char* key, const char* value)
 	return *this;
 }
 
-SocketString& SocketString::SetString(const char * string, int len)
+SocketString& SocketString::SetString(const char* string, int len)
 {
 	return SetContent((void*)string, len);
 }
@@ -69,8 +69,9 @@ SocketString& SocketString::SetInt(int index, int value)
 }
 
 // 设置内容
-SocketString& SocketString::SetContent(void * ptr, int len)
+SocketString& SocketString::SetContent(void* ptr, int len)
 {
+	//::printf("SetContent %d %d.\n", m_SendString.length, len);
 	memcpy(&m_SendString.value[m_SendString.length], ptr, len);
 	m_SendString.length += len;
 
@@ -78,15 +79,21 @@ SocketString& SocketString::SetContent(void * ptr, int len)
 }
 
 
-char* SocketString::MakeSendString(int opcode)
+char* SocketString::MakeSendString(int opcode, int type)
 {
 	m_SendString.length += 8;
-	for (int i = m_SendString.length; i >= 0; i--) {
+	for (int i = m_SendString.length; i >= 8; i--) {
 		m_SendString.value[i] = m_SendString.value[i - 8];
 	}
 	
-	h2ni_s(&m_SendString.value[0], m_SendString.length);
-	h2ni_s(&m_SendString.value[4], opcode);
+	if (type == 1) {
+		h2ni_s(&m_SendString.value[0], m_SendString.length);
+		h2ni_s(&m_SendString.value[4], opcode);
+	}
+	else {
+		memcpy(&m_SendString.value[0], &m_SendString.length, 4);
+		memcpy(&m_SendString.value[4], &opcode, 4);
+	}
 	
 	return m_SendString.value;
 }
@@ -96,7 +103,7 @@ void SocketString::SetRecvString(const char* string)
 	strcpy(m_RecvString, string);
 }
 
-int SocketString::GetRecvValueInt(const char * key, int default_value)
+int SocketString::GetRecvValueInt(const char* key, int default_value)
 {
 	const char* ptr = strstr(m_RecvString, key);
 	if (!ptr) {
@@ -115,7 +122,7 @@ int SocketString::GetRecvValueInt(const char * key, int default_value)
 	return value;
 }
 
-char* SocketString::GetRecvValue(const char* key)
+const char* SocketString::GetRecvValue(const char* key)
 {
 	const char* ptr = strstr(m_RecvString, key);
 	if (!ptr) {
@@ -140,7 +147,7 @@ char* SocketString::GetRecvValue(const char* key)
 }
 
 // 网络数字转成正常数字
-int SocketString::s_n2hi(const char * data)
+int SocketString::s_n2hi(const char* data)
 {
 	int length = 0;
 	length |= (data[0] << 24) & 0xff000000;

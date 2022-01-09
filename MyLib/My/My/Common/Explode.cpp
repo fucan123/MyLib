@@ -14,11 +14,18 @@ Explode::Explode(const char* separator, const char* string)
 {
 	m_Separator = separator;
 	m_String = string;
+
+	for (int i = 0; i < EXPLODE_MAX_LENGTH; i++) { // 分配可用内存
+		m_Value[i] = new char[EXPLODE_MAX_BYTE];
+	}
 	Parse();
 }
 
 Explode::~Explode()
 {
+	for (int i = 0; i < EXPLODE_MAX_LENGTH; i++) {
+		delete[] m_Value[i];
+	}
 }
 
 char* Explode::GetValue(int index)
@@ -29,18 +36,85 @@ char* Explode::GetValue(int index)
 	return m_Value[index];
 }
 
-int Explode::GetValue2Int(int index, int default_value)
+int Explode::GetValue2Int(int index, int default_value, bool is_trim)
 {
-	char* value = GetValue(index);
-	if (value == nullptr)
+	char* str = GetValue(index);
+	if (str == nullptr)
 		return default_value;
 
+	if (is_trim) {
+		while (*str == ' ') str++;
+	}
+	if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
+		return HexToInt(str);
+
+	return DecToInt(str);
+}
+
+int Explode::GetHexValue2Int(int index, int default_value, bool is_trim)
+{
+	char* str = GetValue(index);
+	if (str == nullptr)
+		return default_value;
+
+	if (is_trim) {
+		while (*str == ' ') str++;
+	}
+
+	return HexToInt(str);
+}
+
+int Explode::DecToInt(const char* str, int default_value)
+{
+	if (str == nullptr)
+		return default_value;
+
+	bool sign = false;
+	if (*str == '-') {
+		str++;
+		sign = true;
+	}
+
 	int num = 0;
-	while (*value) {
-		if (*value < '0' || *value > '9')
+	while (*str) {
+		if (*str < '0' || *str > '9')
 			break;
-		num = num * 10 + (*value - '0');
-		value++;
+
+		num = num * 10 + (*str - '0');
+		str++;
+	}
+	return sign ? num*-1 : num;
+}
+
+int Explode::HexToInt(const char* str, int default_value)
+{
+	if (str == nullptr)
+		return default_value;
+
+	if (str[0] == '0') {
+		if (str[1] == 'x' || str[1] == 'X')
+			str += 2;
+	}
+
+	int num = 0;
+	while (*str) {
+		char ch = *str;
+		if (ch >= '0' && ch <= '9') {
+			ch = ch - '0';
+		}
+		else if (ch >= 'A' && ch <= 'F') {
+			ch = ch - 'A' + 0x0A;
+		}
+		else if (ch >= 'a' && ch <= 'f') {
+			ch = ch - 'a' + 0x0a;
+		}
+		else {
+			ch = 0;
+			break;
+		}
+
+		num = num * 0x10 + ch;
+		str++;
 	}
 	return num;
 }
@@ -96,7 +170,7 @@ int Explode::Start()
 				Copy(num, start, end);
 				start = string + 1;
 				num++;
-				//printf("Num:%d String:%c\n", num, *string);
+				//printf("Num:%d String:%s\n", num, string);
 			}
 			else {
 				string = tmp;
@@ -111,8 +185,10 @@ int Explode::Start()
 void Explode::Copy(int index, const char* start, const char *end)
 {
 	int length = end - start;
-	if (index >= EXPLODE_MAX_LENGTH || length >= EXPLODE_MAX_BYTE)
+	if (index >= EXPLODE_MAX_LENGTH)
 		return;
+	if (length >= EXPLODE_MAX_BYTE)
+		length = EXPLODE_MAX_BYTE - 1;
 
 	for (int i = 0; i < length; i++) {
 		m_Value[index][i] = start[i];
